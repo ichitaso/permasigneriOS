@@ -47,7 +47,12 @@ struct SignView: View {
     var body: some View {
         VStack {
             Text(checkapp.fileName != "" ? "\(checkapp.fileName)" : "No ipa file selected")
-            Button(action: {isImporting = true}, label: {Text("Select File")})
+            Button(action: {
+                isImporting = false
+                DispatchQueue.main.asyncAfter(deadline: .now()+0.2, execute: {
+                        isImporting = true
+                    })
+            }, label: {Text("Select File")})
                 .alert(isPresented: $showAlert) {
                     Alert(title: Text(alertTitle), message: Text(alertMeaasge), dismissButton: .default(Text("OK")))
                 }
@@ -106,7 +111,11 @@ struct SignView: View {
             .opacity(checkapp.fileName == "" ? 0.6 : 1.0)
             .buttonStyle(SignButtonStyle())
             ProgressView(label: {
-                Text("Importing iPA file")
+                VStack {
+                    Text("Importing iPA file")
+                    Text("If you didn't select any file,I will just keep running").font(.system(size: 12))
+                }
+                
             }).isHidden(!isImporting)
         }
         .padding()
